@@ -8,10 +8,9 @@ The Post Monitor metabox displays in the Edit Post (or Page) screen in your WP A
 ### Screenshot ###
 
 _Post Monitor Metabox_
-
 ![Post Monitor Metabox](https://raw.github.com/johnregan3/post-monitor/master/assets/screenshot-01.png "Post Monitor Metabox")
 
-### Set User Permissions ###
+### Setting User Permissions ###
 
 The Post Monitor User Permissions setting hides the Metabox from users with different capabilities.
 
@@ -22,8 +21,9 @@ _Post Monitor User Permissions_
 
 2.  In the field "Post Monitor User Access," set the minimum user level that can view the Post Monitor Metabox.
 
-_Developers:  The User Permission's <code>&lt;select&gt;</code> uses Role labels for ease-of-use, but technically, in this plugin the user permissions are bound to Capabilities.  Here's a glimpse at the source:_
+_Developers:  The User Permission's <code>&lt;select&gt;</code> uses Role labels for ease-of-use, but technically, in this plugin the User Permissions are bound to Capabilities.  Here's a glimpse at the source:_
 
+_Mapped Roles/Capabilities_
 ![Mapped Roles](https://raw.github.com/johnregan3/post-monitor/master/assets/screenshot-03.png "Mapped Roles")
 
 ### Changelog ###

@@ -191,6 +191,8 @@ class Post_Monitor {
 		// Post Author
 		$post_info[] = self::get_author( $post );
 
+		$post_info[] = self::get_featured_image( $post_id );
+
 		// Post Attachments
 		$post_info[] = self::get_attachments( $post_id );
 
@@ -281,7 +283,7 @@ class Post_Monitor {
 			if ( is_array( $metadata ) ) {
 				echo self::print_formatted_array( $metadata );
 			} else {
-				echo esc_html__( 'No Post Metadata found', 'post-monitor' );
+				echo '<pre>' . esc_html__( 'No Post Metadata found', 'post-monitor' ) . '</pre>';
 			}
 		return ob_get_clean();
 	}
@@ -290,7 +292,7 @@ class Post_Monitor {
 	/**
 	 * Render Post Author Section
 	 *
-	 * @param  int     $post_id  Post ID of current post
+	 * @param  int     $post  Post object current post
 	 * @return string  Post Author
 	 */
 	static function get_author( $post ) {
@@ -299,12 +301,34 @@ class Post_Monitor {
 			$author_id = $post->post_author;
 			$author    = get_userdata( $author_id );
 			echo "<pre>";
-			echo get_avatar( $author_id, '50' ) . "<br />";
+			echo get_avatar( $author_id, 100 ) . "<br />";
 			echo "[" . __( 'display_name', 'post-monitor' ) . "] => " . $author->data->display_name . "<br />";
 			echo "[" . __( 'ID', 'post-monitor' ) . "] => " . $author->data->ID . "<br />";
 			echo "</pre>";
 		return ob_get_clean();
 	}
+
+
+	/**
+	 * Render Featured Image (Post Thumbnail) Section
+	 *
+	 * @param  int     $post_id  Post ID of current post
+	 * @return string  Post Author
+	 */
+	static function get_featured_image( $post_id ) {
+		ob_start();
+			echo '<h4>' . esc_html__( 'Featured Image', 'post-monitor' ) . '</h4>';
+			if ( has_post_thumbnail( $post_id ) ) {
+				$link = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large');
+				echo '<a href="' . $link[0] . '" >';
+					the_post_thumbnail( array( 100, 100 ) );
+				echo '</a>';
+			} else {
+				echo '<pre>' . esc_html__( 'No Featured Image found.', 'post-monitor' ) . '</pre>';
+			}
+		return ob_get_clean();
+	}
+
 
 
 	/**
@@ -327,7 +351,11 @@ class Post_Monitor {
 			if ( ! empty( $attachments ) ) {
 				foreach ( $attachments as $attachment ) {
 					echo esc_html( $attachment->post_title ) . "<br />";
-					the_attachment_link( $attachment->ID );
+
+					$link = wp_get_attachment_image_src( $attachment->ID, 'large');
+					echo '<a href="' . $link[0] . '" >';
+						echo wp_get_attachment_link( $attachment->ID, array( 100, 100 ) );
+					echo '</a>';
 					echo "<br /><br />";
 				}
 			} else {

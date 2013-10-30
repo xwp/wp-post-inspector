@@ -178,9 +178,6 @@ class WP_Post_Inspector {
 		// Post Object
 		$post_info[] = self::get_post_object( $post );
 
-		// Post Format
-		$post_info[] = self::get_post_format( $post_id );
-
 		// Non-Heierarchical Taxonomies (tags)
 		$post_info[] = self::get_taxonomies( $post_id );
 
@@ -190,6 +187,7 @@ class WP_Post_Inspector {
 		// Post Author
 		$post_info[] = self::get_author( $post );
 
+		// Featured Image
 		$post_info[] = self::get_featured_image( $post_id );
 
 		// Post Attachments
@@ -216,25 +214,6 @@ class WP_Post_Inspector {
 			echo self::print_formatted_array( $post_array );
 		return ob_get_clean();
 	}
-
-
-	/**
-	 * Render Post Format Section
-	 *
-	 * @param  int     $post_id  Post ID of current post
-	 * @return string  Post Format
-	 */
-	static function get_post_format( $post_id ) {
-		ob_start();
-			echo '<h4>' . esc_html__( 'Post Format', 'wp-post-inspector' ) . '</h4>';
-			echo "<pre>";
-			$format = get_post_format( $post_id );
-			$format = ( $format == false ) ? __( 'standard', 'wp-post-inspector' ) : $format ;
-			echo "[" . esc_html__( 'post_format', 'wp-post-inspector' ) . "] => " . esc_html( $format );;
-			echo "</pre>";
-		return ob_get_clean();
-	}
-
 
 	/**
 	 * Render Taxonomy Section

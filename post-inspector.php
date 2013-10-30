@@ -1,18 +1,21 @@
 <?php
 /**
- * Plugin Name: Post Monitor
- * Plugin URI: *
- * Description: Adds a simple metabox to each post/page displaying its meta information, even works on Custom Post Types!  Permissions Setting is found under Settings > Writing > Post Monitor User Access.
- * Author: John Regan
- * Author URI: http://johnregan3.me
+ * Plugin Name: Post Inspector
+ * Description: Adds a simple metabox to each post/page displaying its meta information, even works on Custom Post Types!  Permissions Setting is found under Settings > Writing > Post Inspector User Access.
  * Version: 0.1
- * Text Domain: post-monitor
- *
- * Copyright 2013  John Regan  (email : johnregan3@outlook.com)
+ * Author: X-Team
+ * Author URI: http://x-team.com/wordpress/
+ * Text Domain: wp-post-inspector
+ * License: GPLv2+
+ */
+
+/**
+ * Copyright (c) 2013 X-Team (http://x-team.com/)
  *
  * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License, version 2, as
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License, version 2 or, at
+ * your discretion, any later version, as published by the Free
+ * Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,13 +25,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * @author John Regan
- * @version 0.1
  */
 
-
-class Post_Monitor {
+class WP_Post_Inspector {
 
 	static function setup() {
 		add_action( 'admin_init', array( __CLASS__, 'add_metabox' ) );
@@ -53,13 +52,13 @@ class Post_Monitor {
 		$post_types = array_values( $post_types );
 		if ( self::user_has_access() == true ) {
 			foreach ( $post_types as $post_type ) {
-				add_meta_box( 'post_monitor', 
-					__( 'Post Monitor', 
-						'post-monitor' ), 
-					array( __CLASS__, 'metabox' ), 
-					$post_type, 
-					'normal', 
-					'low' 
+				add_meta_box( 'post_inspector',
+					__( 'Post Inspector',
+						'wp-post-inspector' ),
+					array( __CLASS__, 'metabox' ),
+					$post_type,
+					'normal',
+					'low'
 				);
 			}
 		}
@@ -72,7 +71,7 @@ class Post_Monitor {
 	 * @action admin_init
 	 */
 	static function textdomain() {
-		load_plugin_textdomain( 'post-monitor' );
+		load_plugin_textdomain( 'wp-post-inspector' );
 	}
 
 
@@ -84,7 +83,7 @@ class Post_Monitor {
 	static function style() {
 		ob_start();
 			echo "<style type='text/css'>\n";
-			echo "    #post_monitor { overflow-x: scroll; }\n";
+			echo "    #post_inspector { overflow-x: scroll; }\n";
 			echo "</style>";
 		echo ob_get_clean();
 	}
@@ -98,7 +97,7 @@ class Post_Monitor {
 	static function settings() {
 		add_settings_field(
 			'access',
-			__( 'Post Monitor User Access', 'post-monitor' ),
+			__( 'Post Inspector User Access', 'wp-post-inspector' ),
 			array( __CLASS__, 'access' ),
 			'writing',
 			'default'
@@ -116,10 +115,10 @@ class Post_Monitor {
 		$access   = isset( $settings['access'] ) ? $settings['access'] : 'edit_users' ;
 
 		$permissions = array(
-			'edit_users'    => __( 'Administrator', 'post-monitor' ),
-			'edit_pages'    => __( 'Editor', 'post-monitor' ),
-			'publish_posts' => __( 'Author', 'post-monitor' ),
-			'edit_posts'    => __( 'Contributor', 'post-monitor' ),
+			'edit_users'    => __( 'Administrator', 'wp-post-inspector' ),
+			'edit_pages'    => __( 'Editor', 'wp-post-inspector' ),
+			'publish_posts' => __( 'Author', 'wp-post-inspector' ),
+			'edit_posts'    => __( 'Contributor', 'wp-post-inspector' ),
 		);
 
 		echo "<select name='pijr3_settings[access]'>";
@@ -144,7 +143,7 @@ class Post_Monitor {
 
 
 	/**
-	 * Check if user has access to the Post Monitor
+	 * Check if user has access to the Post Inspector
 	 *
 	 * @uses user_caps()
 	 * @return bool
@@ -210,9 +209,9 @@ class Post_Monitor {
 	 */
 	static function get_post_object( $post ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Post Object', 'post-monitor' ) . '</h4>';
+			echo '<h4>' . esc_html__( 'Post Object', 'wp-post-inspector' ) . '</h4>';
 			$post_array = ( array ) $post;
-			// Remove Post content from Post Monitor display.
+			// Remove Post content from Post Inspector display.
 			unset( $post_array['post_content'] );
 			echo self::print_formatted_array( $post_array );
 		return ob_get_clean();
@@ -227,11 +226,11 @@ class Post_Monitor {
 	 */
 	static function get_post_format( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Post Format', 'post-monitor' ) . '</h4>';
+			echo '<h4>' . esc_html__( 'Post Format', 'wp-post-inspector' ) . '</h4>';
 			echo "<pre>";
 			$format = get_post_format( $post_id );
-			$format = ( $format == false ) ? __( 'standard', 'post-monitor' ) : $format ;
-			echo "[" . esc_html__( 'post_format', 'post-monitor' ) . "] => " . esc_html( $format );;
+			$format = ( $format == false ) ? __( 'standard', 'wp-post-inspector' ) : $format ;
+			echo "[" . esc_html__( 'post_format', 'wp-post-inspector' ) . "] => " . esc_html( $format );;
 			echo "</pre>";
 		return ob_get_clean();
 	}
@@ -245,7 +244,7 @@ class Post_Monitor {
 	 */
 	static function get_taxonomies( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Taxonomies and Terms', 'post-monitor' ) . '</h4>';
+			echo '<h4>' . esc_html__( 'Taxonomies and Terms', 'wp-post-inspector' ) . '</h4>';
 			echo '<pre>';
 			$terms_list = '';
 			$taxonomies = get_taxonomies();
@@ -262,7 +261,7 @@ class Post_Monitor {
 			if ( ! empty( $terms_list ) ){
 				echo $terms_list;
 			} else {
-				echo esc_html__( 'No Terms found', 'post-monitor' );
+				echo esc_html__( 'No Terms found', 'wp-post-inspector' );
 			}
 			echo '</pre>';
 		return ob_get_clean();
@@ -278,12 +277,12 @@ class Post_Monitor {
 	 */
 	static function get_post_meta( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Post Metadata', 'post-monitor' ) . '</h4>';
+			echo '<h4>' . esc_html__( 'Post Metadata', 'wp-post-inspector' ) . '</h4>';
 			$metadata = get_metadata( 'post', $post_id, '' );
 			if ( is_array( $metadata ) ) {
 				echo self::print_formatted_array( $metadata );
 			} else {
-				echo '<pre>' . esc_html__( 'No Post Metadata found', 'post-monitor' ) . '</pre>';
+				echo '<pre>' . esc_html__( 'No Post Metadata found', 'wp-post-inspector' ) . '</pre>';
 			}
 		return ob_get_clean();
 	}
@@ -297,13 +296,13 @@ class Post_Monitor {
 	 */
 	static function get_author( $post ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Author', 'post-monitor' ) . '</h4>';
+			echo '<h4>' . esc_html__( 'Author', 'wp-post-inspector' ) . '</h4>';
 			$author_id = $post->post_author;
 			$author    = get_userdata( $author_id );
 			echo "<pre>";
 			echo get_avatar( $author_id, 100 ) . "<br />";
-			echo "[" . __( 'display_name', 'post-monitor' ) . "] => " . $author->data->display_name . "<br />";
-			echo "[" . __( 'ID', 'post-monitor' ) . "] => " . $author->data->ID . "<br />";
+			echo "[" . __( 'display_name', 'wp-post-inspector' ) . "] => " . $author->data->display_name . "<br />";
+			echo "[" . __( 'ID', 'wp-post-inspector' ) . "] => " . $author->data->ID . "<br />";
 			echo "</pre>";
 		return ob_get_clean();
 	}
@@ -317,14 +316,14 @@ class Post_Monitor {
 	 */
 	static function get_featured_image( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Featured Image', 'post-monitor' ) . '</h4>';
+			echo '<h4>' . esc_html__( 'Featured Image', 'wp-post-inspector' ) . '</h4>';
 			if ( has_post_thumbnail( $post_id ) ) {
 				$link = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large');
 				echo '<a href="' . $link[0] . '" >';
 					the_post_thumbnail( array( 100, 100 ) );
 				echo '</a>';
 			} else {
-				echo '<pre>' . esc_html__( 'No Featured Image found.', 'post-monitor' ) . '</pre>';
+				echo '<pre>' . esc_html__( 'No Featured Image found.', 'wp-post-inspector' ) . '</pre>';
 			}
 		return ob_get_clean();
 	}
@@ -339,7 +338,7 @@ class Post_Monitor {
 	 */
 	static function get_attachments( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Post Attachments', 'post-monitor' ) . '</h4>';
+			echo '<h4>' . esc_html__( 'Post Attachments', 'wp-post-inspector' ) . '</h4>';
 			echo "<pre>";
 			$args = array(
 				'post_parent' => $post_id,
@@ -359,7 +358,7 @@ class Post_Monitor {
 					echo "<br /><br />";
 				}
 			} else {
-				echo esc_html__( 'No Attachments found', 'post-monitor' );
+				echo esc_html__( 'No Attachments found', 'wp-post-inspector' );
 			}
 			echo "</pre>";
 		return ob_get_clean();
@@ -418,4 +417,4 @@ class Post_Monitor {
 
 }
 
-add_action( 'plugins_loaded', array( 'Post_Monitor', 'setup' ) );
+add_action( 'plugins_loaded', array( 'WP_Post_Inspector', 'setup' ) );

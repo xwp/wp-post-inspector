@@ -52,9 +52,9 @@ class WP_Post_Inspector {
 		$post_types = array_values( $post_types );
 		if ( self::user_has_access() == true ) {
 			foreach ( $post_types as $post_type ) {
-				add_meta_box( 'post_inspector',
-					__( 'Post Inspector',
-						'wp-post-inspector' ),
+				add_meta_box(
+					'post_inspector',
+					__( 'Post Inspector', 'wp-post-inspector' ),
 					array( __CLASS__, 'metabox' ),
 					$post_type,
 					'normal',
@@ -84,8 +84,8 @@ class WP_Post_Inspector {
 		ob_start();
 			echo "<style type='text/css'>\n";
 			echo "    #post_inspector { overflow-x: scroll; }\n";
-			echo "</style>";
-		echo ob_get_clean();
+			echo '</style>';
+		echo ob_get_clean(); //xss okay
 	}
 
 
@@ -102,30 +102,32 @@ class WP_Post_Inspector {
 			'writing',
 			'default'
 		);
-		register_setting( 'pijr3_settings_group', 'pijr3_settings' );
+		register_setting( 'xtpi_settings_group', 'xtpi_settings' );
 	}
 
 
 	/**
 	 * Render Access Level settings field
+	 *
+	 * @return  string  Capability levels
 	 */
 	static function access() {
-		settings_fields( 'pijr3_settings_group' );
-		$settings = get_option( 'pijr3_settings' );
+		settings_fields( 'xtpi_settings_group' );
+		$settings = get_option( 'xtpi_settings' );
 		$access   = isset( $settings['access'] ) ? $settings['access'] : 'edit_users' ;
 
-		$permissions = array(
-			'edit_users'    => __( 'Administrator', 'wp-post-inspector' ),
-			'edit_pages'    => __( 'Editor', 'wp-post-inspector' ),
-			'publish_posts' => __( 'Author', 'wp-post-inspector' ),
-			'edit_posts'    => __( 'Contributor', 'wp-post-inspector' ),
+		$caps = array(
+			'create_users'      => __( 'Create Users', 'wp-post-inspector' ),
+			'edit_others_posts' => __( 'Edit Others\' Posts', 'wp-post-inspector' ),
+			'publish_posts'     => __( 'Publish Posts', 'wp-post-inspector' ),
+			'edit_posts'        => __( 'Edit Posts', 'wp-post-inspector' ),
 		);
 
-		echo "<select name='pijr3_settings[access]'>";
-			foreach ( $permissions as $cap => $role ) {
-				echo "<option value='" . esc_attr( $cap ) . "' " . selected( $access, $cap, false) . " >"  . esc_html( $role ) . "</option>";
-			}
-		echo "</select>";
+		echo "<select name='xtpi_settings[access]'>";
+		foreach ( $caps as $cap => $role ) {
+			echo '<option value="' . esc_attr( $cap ) . '" ' . selected( $access, $cap, false ) . ' >'  . esc_html( $role ) . '</option>';
+		}
+		echo '</select>';
 	}
 
 
@@ -145,11 +147,11 @@ class WP_Post_Inspector {
 	/**
 	 * Check if user has access to the Post Inspector
 	 *
-	 * @uses user_caps()
+	 * @uses   user_caps
 	 * @return bool
 	 */
 	static function user_has_access() {
-		$settings    = get_option( 'pijr3_settings' );
+		$settings    = get_option( 'xtpi_settings' );
 		$access_caps = isset( $settings['access'] ) ? $settings['access'] : 'edit_users' ;
 		$user_caps   = self::user_caps();
 		if ( is_array( $user_caps ) && in_array( $access_caps, $user_caps ) ) {
@@ -162,13 +164,13 @@ class WP_Post_Inspector {
 	/**
 	 * Render Metabox
 	 *
-	 * @uses get_post_object()
-	 * @uses get_post_format()
-	 * @uses get_taxonomies()
-	 * @uses get_post_meta()
-	 * @uses get_author()
-	 * @uses get_attachments()
-	 * @uses render()
+	 * @uses get_post_object
+	 * @uses get_post_format
+	 * @uses get_taxonomies
+	 * @uses get_post_meta
+	 * @uses get_author
+	 * @uses get_attachments
+	 * @uses render
 	 */
 	static function metabox() {
 		global $post;
@@ -211,7 +213,7 @@ class WP_Post_Inspector {
 			$post_array = ( array ) $post;
 			// Remove Post content from Post Inspector display.
 			unset( $post_array['post_content'] );
-			echo self::print_formatted_array( $post_array );
+			echo self::print_formatted_array( $post_array ); //xss okay
 		return ob_get_clean();
 	}
 
@@ -223,26 +225,26 @@ class WP_Post_Inspector {
 	 */
 	static function get_taxonomies( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Taxonomies and Terms', 'wp-post-inspector' ) . '</h4>';
-			echo '<pre>';
-			$terms_list = '';
-			$taxonomies = get_taxonomies();
-			if ( ! empty( $taxonomies ) ) {
-				foreach ( $taxonomies as $taxonomy ) {
-					$terms = get_the_terms( $post_id, $taxonomy );
-					if ( is_array( $terms ) ) {
-						foreach ( $terms as $term ) {
-							$terms_list .= '[' . esc_html( $term->taxonomy ) . '] => ' . esc_html( $term->name ) . '<br />';
-						}
+		echo '<h4>' . esc_html__( 'Taxonomies and Terms', 'wp-post-inspector' ) . '</h4>';
+		echo '<pre>';
+		$terms_list = '';
+		$taxonomies = get_taxonomies();
+		if ( ! empty( $taxonomies ) ) {
+			foreach ( $taxonomies as $taxonomy ) {
+				$terms = get_the_terms( $post_id, $taxonomy );
+				if ( is_array( $terms ) ) {
+					foreach ( $terms as $term ) {
+						$terms_list .= '[' . esc_html( $term->taxonomy ) . '] => ' . esc_html( $term->name ) . '<br />';
 					}
 				}
 			}
-			if ( ! empty( $terms_list ) ){
-				echo $terms_list;
-			} else {
-				echo esc_html__( 'No Terms found', 'wp-post-inspector' );
-			}
-			echo '</pre>';
+		}
+		if ( ! empty( $terms_list ) ){
+			echo $terms_list; //xss okay
+		} else {
+			echo esc_html__( 'No Terms found', 'wp-post-inspector' );
+		}
+		echo '</pre>';
 		return ob_get_clean();
 	}
 
@@ -256,13 +258,13 @@ class WP_Post_Inspector {
 	 */
 	static function get_post_meta( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Post Metadata', 'wp-post-inspector' ) . '</h4>';
-			$metadata = get_metadata( 'post', $post_id, '' );
-			if ( is_array( $metadata ) ) {
-				echo self::print_formatted_array( $metadata );
-			} else {
-				echo '<pre>' . esc_html__( 'No Post Metadata found', 'wp-post-inspector' ) . '</pre>';
-			}
+		echo '<h4>' . esc_html__( 'Post Metadata', 'wp-post-inspector' ) . '</h4>';
+		$metadata = get_metadata( 'post', $post_id, '' );
+		if ( is_array( $metadata ) ) {
+			echo self::print_formatted_array( $metadata ); //xss okay
+		} else {
+			echo '<pre>' . esc_html__( 'No Post Metadata found', 'wp-post-inspector' ) . '</pre>';
+		}
 		return ob_get_clean();
 	}
 
@@ -275,14 +277,14 @@ class WP_Post_Inspector {
 	 */
 	static function get_author( $post ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Author', 'wp-post-inspector' ) . '</h4>';
-			$author_id = $post->post_author;
-			$author    = get_userdata( $author_id );
-			echo "<pre>";
-			echo get_avatar( $author_id, 100 ) . "<br />";
-			echo "[" . __( 'display_name', 'wp-post-inspector' ) . "] => " . $author->data->display_name . "<br />";
-			echo "[" . __( 'ID', 'wp-post-inspector' ) . "] => " . $author->data->ID . "<br />";
-			echo "</pre>";
+		echo '<h4>' . esc_html__( 'Author', 'wp-post-inspector' ) . '</h4>';
+		$author_id = $post->post_author;
+		$author    = get_userdata( $author_id );
+		echo '<pre>';
+		echo get_avatar( $author_id, 100 ) . '<br />';
+		echo '[' . __( 'display_name', 'wp-post-inspector' ) . '] => ' . $author->data->display_name . '<br />';
+		echo '[' . __( 'ID', 'wp-post-inspector' ) . '] => ' . $author->data->ID . '<br />';
+		echo '</pre>';
 		return ob_get_clean();
 	}
 
@@ -295,15 +297,15 @@ class WP_Post_Inspector {
 	 */
 	static function get_featured_image( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Featured Image', 'wp-post-inspector' ) . '</h4>';
-			if ( has_post_thumbnail( $post_id ) ) {
-				$link = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large');
-				echo '<a href="' . $link[0] . '" >';
-					the_post_thumbnail( array( 100, 100 ) );
-				echo '</a>';
-			} else {
-				echo '<pre>' . esc_html__( 'No Featured Image found.', 'wp-post-inspector' ) . '</pre>';
-			}
+		echo '<h4>' . esc_html__( 'Featured Image', 'wp-post-inspector' ) . '</h4>';
+		if ( has_post_thumbnail( $post_id ) ) {
+			$link = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large' );
+			echo '<a href="' . $link[0] . '" >';
+				the_post_thumbnail( array( 100, 100 ) );
+			echo '</a>';
+		} else {
+			echo '<pre>' . esc_html__( 'No Featured Image found.', 'wp-post-inspector' ) . '</pre>';
+		}
 		return ob_get_clean();
 	}
 
@@ -317,81 +319,86 @@ class WP_Post_Inspector {
 	 */
 	static function get_attachments( $post_id ) {
 		ob_start();
-			echo '<h4>' . esc_html__( 'Post Attachments', 'wp-post-inspector' ) . '</h4>';
-			echo "<pre>";
-			$args = array(
-				'post_parent' => $post_id,
-				'post_type' => 'attachment',
-				'posts_per_page' => -1,
-				'post_status' =>'any',
-			);
-			$attachments = get_posts( $args );
-			if ( ! empty( $attachments ) ) {
-				foreach ( $attachments as $attachment ) {
-					echo esc_html( $attachment->post_title ) . "<br />";
+		echo '<h4>' . esc_html__( 'Post Attachments', 'wp-post-inspector' ) . '</h4>';
+		echo '<pre>';
+		$args = array(
+			'post_parent'    => $post_id,
+			'post_type'      => 'attachment',
+			'posts_per_page' => -1,
+			'post_status'    => 'any',
+		);
+		$attachments = get_posts( $args );
+		if ( ! empty( $attachments ) ) {
+			foreach ( $attachments as $attachment ) {
+				echo esc_html( $attachment->post_title ) . '<br />';
 
-					$link = wp_get_attachment_image_src( $attachment->ID, 'large');
-					echo '<a href="' . $link[0] . '" >';
-						echo wp_get_attachment_link( $attachment->ID, array( 100, 100 ) );
-					echo '</a>';
-					echo "<br /><br />";
-				}
-			} else {
-				echo esc_html__( 'No Attachments found', 'wp-post-inspector' );
+				$link = wp_get_attachment_image_src( $attachment->ID, 'large' );
+				echo '<a href="' . $link[0] . '" >';
+					echo wp_get_attachment_link( $attachment->ID, array( 100, 100 ) );
+				echo '</a>';
+				echo '<br /><br />';
 			}
-			echo "</pre>";
+		} else {
+			echo esc_html__( 'No Attachments found', 'wp-post-inspector' );
+		}
+		echo '</pre>';
 		return ob_get_clean();
 	}
 
 
 	/**
-	 * Format Arrays into clean format
+	 * Format Arrays into clean format.
 	 *
-	 * @param  int     $post_id  Post ID of current post
-	 * @return string  $return   String of formatted array.
+	 * @param  array   Array to be formatted.
+	 * @return string  String of formatted array.
 	 */
 	static function print_formatted_array( $array = array() ) {
 		ob_start();
-			echo "<pre>";
-			foreach ( $array as $child => $childval ) {
-					if ( is_array( $childval ) ) {
-						echo "[" . esc_html( $child ) . "]" . "\n";
+		echo '<pre>';
+		foreach ( $array as $child => $childval ) {
+			if ( is_array( $childval ) ) {
+				echo '[' . esc_html( $child ) . ']' . '<br />';
 
-						foreach ( $childval as $value => $key ) {
-							if ( is_array( $value ) ) {
-								foreach( $value as $key => $value ) {
-									echo '        [' . esc_html( $key ) . '] => ' . esc_html( $value ) . '<br />';
-								}
-
-							} elseif ( @unserialize( $key ) !== false ) {
-								$array = @unserialize( $key );
-								foreach ( $array as $key => $value ) {
-									echo '    [' . esc_html( $key ) . '] => ' . esc_html( $value ) . '<br />';
-								}
-
-							} else {
-								echo '    [0] => ' . esc_html( $key ) . '<br />';
-							}
+				foreach ( $childval as $value => $key ) {
+					if ( is_array( $value ) ) {
+						foreach ( $value as $key => $value ) {
+							echo '        [' . esc_html( $key ) . '] => ' . esc_html( $value ) . '<br />';
 						}
-
+					} elseif ( @unserialize( $key ) !== false ) {
+						$array = @unserialize( $key );
+						foreach ( $array as $key => $value ) {
+							echo '    [' . esc_html( $key ) . '] => ' . esc_html( $value ) . '<br />';
+						}
 					} else {
-						echo "[" . esc_html( $child ) . "] => " . esc_html( $childval ) . "<br />";
+						echo '    [0] => ' . esc_html( $key ) . '<br />';
 					}
 				}
-			echo "</pre>";
+			} else {
+				echo '[' . esc_html( $child ) . '] => ' . esc_html( $childval ) . '<br />';
+			}
+		}
+		echo '</pre>';
 		return ob_get_clean();
 	}
 
 
 	/**
-	* Render the contents of the Post Metabox
+	* Render the contents of the Post Metabox.
 	*
-	* @param  array  $post_info  Array of information from all sections
+	* @param  array  $post_info  Array of information from all sections.
 	*/
 	static function render( $post_info ) {
 		foreach ( $post_info as $item ) {
-			echo $item;
+			echo $item; //xss okay
 		}
+	}
+
+
+	/**
+	 * Remove all plugin data
+	 */
+	public static function uninstall() {
+		unregister_setting( 'xtpi_settings_group', 'xtpi_settings' );
 	}
 
 }

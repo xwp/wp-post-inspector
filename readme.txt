@@ -1,4 +1,4 @@
-=== Post Inspector WordPress Plugin ===
+=== WP Post Inspector Plugin ===
 Contributors:      X-team, johnregan3
 Tags:              post, post meta, postmeta, post object, object, attachments, custom post type
 Tested up to:      3.7.1

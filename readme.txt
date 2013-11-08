@@ -27,7 +27,7 @@ Install WP Post Inspector just as you would any other WP Plugin:
 
 3.  Upload the Plugin folder (wp-post-inspector/) to the wp-content/plugins folder.
 
-4. Go to [Plugins Admin Panel](http://codex.wordpress.org/Administration_Panels#Plugins "Plugins Admin Panel") and find the newly uploaded Plugin, "Simple Custom CSS" in the list.
+4. Go to [Plugins Admin Panel](http://codex.wordpress.org/Administration_Panels#Plugins "Plugins Admin Panel") and find the newly uploaded Plugin, "WP Post Inspector" in the list.
 
 5. Click Activate Plugin to activate it.
 
@@ -39,9 +39,9 @@ Install WP Post Inspector just as you would any other WP Plugin:
 
 1.  Navigate to Settings > Writing.
 
-2.  In the field "Post Inspector User Access," set the minimum user level that can view the Post Inspector Metabox.
+2.  In the field "Post Inspector User Access," set the minimum Capability that can view the Post Inspector Metabox.
 
-_Developers:  The User Permission's <code>&lt;select&gt;</code> uses Role labels for ease-of-use, but technically, in this plugin the User Permissions are bound to Capabilities._
+_See ["Capability vs. Role Table"](http://codex.wordpress.org/Roles_and_Capabilities#Capability_vs._Role_Table) in the WordPress Codex for help determining a capability level for your install._
 
 == Screenshots ==
 

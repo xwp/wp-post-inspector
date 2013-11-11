@@ -102,7 +102,7 @@ class WP_Post_Inspector {
 			'writing',
 			'default'
 		);
-		register_setting( 'xtpi_settings_group', 'xtpi_settings' );
+		register_setting( 'wppi_settings_group', 'wppi_settings' );
 	}
 
 
@@ -112,8 +112,8 @@ class WP_Post_Inspector {
 	 * @return  string  Capability levels
 	 */
 	static function access() {
-		settings_fields( 'xtpi_settings_group' );
-		$settings = get_option( 'xtpi_settings' );
+		settings_fields( 'wppi_settings_group' );
+		$settings = get_option( 'wppi_settings' );
 		$access   = isset( $settings['access'] ) ? $settings['access'] : 'edit_users' ;
 
 		$caps = array(
@@ -123,7 +123,7 @@ class WP_Post_Inspector {
 			'edit_posts'        => __( 'Edit Posts', 'wp-post-inspector' ),
 		);
 
-		echo "<select name='xtpi_settings[access]'>";
+		echo "<select name='wppi_settings[access]'>";
 		foreach ( $caps as $cap => $role ) {
 			echo '<option value="' . esc_attr( $cap ) . '" ' . selected( $access, $cap, false ) . ' >'  . esc_html( $role ) . '</option>';
 		}
@@ -151,7 +151,7 @@ class WP_Post_Inspector {
 	 * @return bool
 	 */
 	static function user_has_access() {
-		$settings    = get_option( 'xtpi_settings' );
+		$settings    = get_option( 'wppi_settings' );
 		$access_caps = isset( $settings['access'] ) ? $settings['access'] : 'edit_users' ;
 		$user_caps   = self::user_caps();
 		if ( is_array( $user_caps ) && in_array( $access_caps, $user_caps ) ) {
@@ -398,7 +398,7 @@ class WP_Post_Inspector {
 	 * Remove all plugin data
 	 */
 	public static function uninstall() {
-		unregister_setting( 'xtpi_settings_group', 'xtpi_settings' );
+		unregister_setting( 'wppi_settings_group', 'wppi_settings' );
 	}
 
 }

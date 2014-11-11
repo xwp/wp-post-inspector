@@ -1,5 +1,5 @@
 === WP Post Inspector Plugin ===
-Contributors:      X-team, johnregan3
+Contributors:      xwp, johnregan3
 Tags:              post, post meta, postmeta, post object, object, attachments, custom post type
 Tested up to:      3.7.1
 Requires at least: 3.6
@@ -15,7 +15,7 @@ Displays the Post object, Taxonomies, Post Meta fields and more!
 
 The Post Inspector metabox displays in the Edit Post (or Page) screen in your WP Admin.  It displays useful information about the post for debugging.
 
-**Development of this plugin is done [on GitHub](https://github.com/x-team/wp-post-inspector). Pull requests welcome. Please see [issues](https://github.com/x-team/wp-post-inspector/issues) reported there before going to the plugin forum.**
+**Development of this plugin is done [on GitHub](https://github.com/xwp/wp-post-inspector). Pull requests welcome. Please see [issues](https://github.com/xwp/wp-post-inspector/issues) reported there before going to the plugin forum.**
 
 == Installation ==
 

@@ -3,14 +3,14 @@
  * Plugin Name: Post Inspector
  * Description: Adds a simple metabox to each post/page displaying its meta information, even works on Custom Post Types!  Permissions Setting is found under Settings > Writing > Post Inspector User Access.
  * Version: 0.1
- * Author: X-Team
- * Author URI: http://x-team.com/wordpress/
+ * Author: XWP
+ * Author URI: https://xwp.co/
  * Text Domain: wp-post-inspector
  * License: GPLv2+
  */
 
 /**
- * Copyright (c) 2013 X-Team (http://x-team.com/)
+ * Copyright (c) 2013 XWP (https://xwp.co/)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2 or, at

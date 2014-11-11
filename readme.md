@@ -4,12 +4,14 @@
 ![Banner](assets/banner-1544x500.png)
 Adds a simple metabox to each post/page/custom post type displaying its complete meta information.
 
-**Contributors:** [x-team](http://profiles.wordpress.org/x-team), [johnregan3](http://profiles.wordpress.org/johnregan3)  
+**Contributors:** [xwp](http://profiles.wordpress.org/xwp), [johnregan3](http://profiles.wordpress.org/johnregan3)  
 **Tags:** [post](http://wordpress.org/plugins/tags/post), [post meta](http://wordpress.org/plugins/tags/post meta), [postmeta](http://wordpress.org/plugins/tags/postmeta), [post object](http://wordpress.org/plugins/tags/post object), [object](http://wordpress.org/plugins/tags/object), [attachments](http://wordpress.org/plugins/tags/attachments), [custom post type](http://wordpress.org/plugins/tags/custom post type)  
 **Requires at least:** 3.6  
 **Tested up to:** 3.7.1  
 **Stable tag:** trunk (master)  
 **License:** [GPLv2 or later](http://www.gnu.org/licenses/gpl-2.0.html)  
+
+[![Build Status](https://travis-ci.org/xwp/wp-post-inspector.png?branch=master)](https://travis-ci.org/xwp/wp-post-inspector) 
 
 ## Description ##
 
@@ -17,7 +19,7 @@ Displays the Post object, Taxonomies, Post Meta fields and more!
 
 The Post Inspector metabox displays in the Edit Post (or Page) screen in your WP Admin.  It displays useful information about the post for debugging.
 
-**Development of this plugin is done [on GitHub](https://github.com/x-team/wp-post-inspector). Pull requests welcome. Please see [issues](https://github.com/x-team/wp-post-inspector/issues) reported there before going to the plugin forum.**
+**Development of this plugin is done [on GitHub](https://github.com/xwp/wp-post-inspector). Pull requests welcome. Please see [issues](https://github.com/xwp/wp-post-inspector/issues) reported there before going to the plugin forum.**
 
 ## Installation ##
 
